@@ -54,8 +54,7 @@ namespace HomeWorkScore2
                     _сoins -= product.Price;
                     Console.WriteLine(_сoins);
                     Console.WriteLine("Отлично сделка удалась !");
-                    _products.Add(new Product(product.Title, product.Price));
-
+                    _products.Add(new Product(product.Title, product.Price))
                 }
                 else
                 {
