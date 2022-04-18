@@ -54,7 +54,7 @@ namespace HomeWorkScore2
                     _сoins -= product.Price;
                     Console.WriteLine(_сoins);
                     Console.WriteLine("Отлично сделка удалась !");
-                    _products.Add(new Product(product.Title, product.Price))
+                    _products.Add(new Product(product.Title, product.Price));
                 }
                 else
                 {
@@ -79,7 +79,7 @@ namespace HomeWorkScore2
 
         public Salesman()
         {
-            СreationProducts();
+            CreateProducts();
         }
 
         public void ShowInfo()
@@ -112,7 +112,7 @@ namespace HomeWorkScore2
             return product;
         }
 
-        private void СreationProducts()
+        private void CreateProducts()
         {
             _products.Add(new Product("Яйцо Дракона", 40));
             _products.Add(new Product("Пылесос", 20));
