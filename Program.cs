@@ -27,7 +27,7 @@ namespace HomeWorkScore2
                         break;
 
                     case "2":
-                        player.BuyProduct();
+                        player.BuyProduct(salesman);
                         break;
 
                     case "3":
@@ -41,12 +41,11 @@ namespace HomeWorkScore2
     class Player
     {
         private List<Product> _products = new List<Product>();
-        private Salesman _salesman = new Salesman();
         private int _сoins = 100;
 
-        public void BuyProduct()
+        public void BuyProduct(Salesman salesman)
         {
-            Product product = _salesman.BuyProduct();
+            Product product = salesman.BuyProduct();
             if (product != null)
             {
                 if (product.Price < _сoins)
