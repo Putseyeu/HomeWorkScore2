@@ -4,131 +4,125 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeWorkScore2
+namespace HomeWorkGladiator2
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Salesman salesman = new Salesman();
-            Player player = new Player();
-            Console.WriteLine("Добро пожаловать в магазин. Выйти из магазина - end ");
-            string userInput = Console.ReadLine();
+            Gladiator gladiatorOne = null;
+            Gladiator gladiatorTwo = null;
+            Warrior warrior = null;
+            Magician magician = null;
+            string userInput = "";
 
-            while (userInput != "end")
-            {
-                Console.WriteLine("1 - Посмотреть товар продоваца. 2 - Купить предмет. 3 - Взглянуть что купил.");
-                userInput = Console.ReadLine();
+            Console.WriteLine("Выбериите тип первого  бойца. 1 - Воин, 2 - Боевой маг.");
 
-                switch (userInput)
-                {
-                    case "1":
-                        salesman.ShowInfo();
-                        break;
+            switch (userInput= Console.ReadLine())
+            {                
+                case "1":
+                    gladiatorOne = new Warrior();
+                    warrior = gladiatorOne as Warrior;
+                    break;
 
                     case "2":
-                        player.BuyProduct(salesman);
-                        break;
-
-                    case "3":
-                        player.ShowInfo();
-                        break;
-                }
+                    gladiatorOne = new Magician();
+                    magician = gladiatorTwo as Magician;
+                    break;
             }
-        }
-    }
 
-    class Player
-    {
-        private List<Product> _products = new List<Product>();
-        private int _сoins = 100;
+            Console.WriteLine("Выбериите тип второго  бойца. 1 - Воин, 2 - Боевой маг.");
 
-        public void BuyProduct(Salesman salesman)
-        {
-            Product product = salesman.BuyProduct();
-            if (product != null)
+            switch (userInput = Console.ReadLine())
             {
-                if (product.Price < _сoins)
+                case "1":
+                    gladiatorTwo = new Warrior();
+                    warrior = gladiatorOne as Warrior;
+                    break;
+
+                case "2":
+                    gladiatorTwo = new Magician();
+                    magician = gladiatorTwo as Magician;
+                    break;
+            }
+
+            if (warrior != null && magician != null)
+            {
+                while (true)
                 {
-                    _сoins -= product.Price;
-                    Console.WriteLine(_сoins);
-                    Console.WriteLine("Отлично сделка удалась !");
-                    _products.Add(new Product(product.Title, product.Price));
-                }
-                else
-                {
-                    Console.WriteLine("У вас не достаточно денег!");
-                }
-            }
-        }
+                    gladiatorOne.ChangeHealth(gladiatorOne.Health, gladiatorTwo.Damage);
+                    gladiatorTwo.ChangeHealth(gladiatorTwo.Health, gladiatorOne.Damage);
+                    Console.WriteLine(gladiatorOne.Health);
+                    Console.WriteLine(gladiatorTwo.Health);
 
-        public void ShowInfo()
-        {
-            Console.WriteLine("Ваши приобретеные предметы!");
-            foreach (Product product in _products)
-            {
-                Console.WriteLine(product.Title);
-            }
-        }
-    }
-
-    class Salesman
-    {
-        private List<Product> _products = new List<Product>();
-
-        public Salesman()
-        {
-            CreateProducts();
-        }
-
-        public void ShowInfo()
-        {
-            foreach (var products in _products)
-            {
-                Console.WriteLine($"\n В продаже {products.Title}. Цена за штуку {products.Price} золотых монет.");
-            }
-        }
-
-        public Product BuyProduct()
-        {
-            Console.WriteLine("Какой товар хотите купить ?");
-            string userInput = Console.ReadLine();
-            Product product = null;
-
-            for (int i = 0; i < _products.Count; i++)
-            {
-                if (_products[i].Title.Contains(userInput))
-                {
-                    Console.WriteLine($"{_products[i].Title} стоит {_products[i].Price} монет");
-                    Console.WriteLine("Покупаете ? да или нет?");
-                    if (Console.ReadLine() == "да")
+                    if (gladiatorTwo.Health <= 0)
                     {
-                        Console.WriteLine("Деньги вперёд!");
-                        product = _products[i];
+                        Console.WriteLine($"победил {gladiatorOne.Name}");
+                        break;
+                    }
+
+                    if (gladiatorOne.Health <= 0)
+                    {
+                        Console.WriteLine($"победил {gladiatorTwo.Name}");
+                        break;
                     }
                 }
             }
-            return product;
+
+            Console.ReadLine();
+        }        
+    }
+
+    class Gladiator
+    {
+        private int _health = 100;
+        protected int _damage = 15;
+        Random random = new Random();
+
+        public string Name { get; private set; }
+        public int Health => _health;
+        public int Damage => _damage;
+
+        public Gladiator()
+        {
+            SetName();
         }
 
-        private void CreateProducts()
+        public int ChangeHealth (int health, int damage)
         {
-            _products.Add(new Product("Яйцо Дракона", 40));
-            _products.Add(new Product("Пылесос", 20));
-            _products.Add(new Product("Палка-Капалка", 40));
-            _products.Add(new Product("Палка-Ковырялка", 40));
+            
+            int minDamage = 0;
+            int maxDamage = damage;
+
+            health -= random.Next(minDamage,maxDamage);
+            _health = health;
+            return Health;
+        }
+
+        public void SetName()
+        {
+            Console.WriteLine("Вы на арене ! Назовите своё имя!");
+            Name = Console.ReadLine();
         }
     }
 
-    class Product
+    class Magician : Gladiator
     {
-        public string Title { get; private set; }
-        public int Price { get; private set; }
-
-        public Product(string title, int price)
+        public void UseTalent()
         {
-            Title = title;
-            Price = price;
+            int magicDamage = 10;
+            Console.WriteLine("Маг произносит заклинание и огненый шар летит а противника");
+            _damage += magicDamage;
+        }
+    }
+
+    class Warrior : Gladiator
+    {
+        public void UseTalent()
+        {
+            int additionalDamage = 15;
+            Console.WriteLine("Воин размашисто рубит противника");
+            _damage += additionalDamage;
         }
     }
 }
